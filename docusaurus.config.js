@@ -18,7 +18,7 @@ module.exports = {
       title: 'mhost',
       logo: {
         alt: 'mhost',
-        src: 'img/logo.svg',
+        src: 'img/logo_blue.svg',
       },
       items: [
         /*

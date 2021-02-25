@@ -9,7 +9,7 @@ import styles from './styles.module.css';
 const features = [
     {
     title: 'Super fast and reliable',
-    imageUrl: 'img/fast_reliable.svg',
+    imageUrl: 'img/fast_reliable_blue.svg',
     description: (
       <>
         mhost is very fast and uses multiple DNS servers concurrently and aggregates all results for more reliable lookups.
@@ -18,7 +18,7 @@ const features = [
   },
   {
     title: 'Classic and modern',
-    imageUrl: 'img/classic_modern.svg',
+    imageUrl: 'img/classic_modern_blue.svg',
     description: (
       <>
         mhost supports classic DNS over UDP and TCP as well as modern DNS over TLS (DoT) and HTTP (DoH).
@@ -27,7 +27,7 @@ const features = [
   },
   {
     title: 'Human and machine friendly',
-    imageUrl: 'img/human_machine_friendly.svg',
+    imageUrl: 'img/human_machine_friendly_blue.svg',
     description: (
       <>
         mhost presents results in an easy, human readable format or as JSON for post-processing.
@@ -36,7 +36,7 @@ const features = [
   },
   {
     title: 'Discover hosts and subdomains',
-    imageUrl: 'img/discover.svg',
+    imageUrl: 'img/discover_blue.svg',
     description: (
       <>
         mhost discovers host names, subdomains of any domain, as well as IP subnets in CIDR notation.
@@ -45,7 +45,7 @@ const features = [
   },
   {
     title: 'Lint your domain server configuration',
-    imageUrl: 'img/lint.svg',
+    imageUrl: 'img/lint_blue.svg',
     description: (
       <>
         mhost uses lints to validate the DNS configurations of any domain.
@@ -54,7 +54,7 @@ const features = [
   },
   {
     title: 'API',
-    imageUrl: 'img/api.svg',
+    imageUrl: 'img/api_blue.svg',
     description: (
       <>
         mhost offers an easy to use Rust library so you can use the same lookup capabilities in your own project.

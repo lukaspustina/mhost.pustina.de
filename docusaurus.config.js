@@ -2,12 +2,12 @@ module.exports = {
   title: 'mhost',
   tagline: 'A modern take on the classic host DNS lookup utility including an easy to use, and very fast Rust library.',
   url: 'https://mhost.pustina.de',
-  baseUrl: '/',
+  baseUrl: '/mhost.pustina.de/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'lukaspustina', // Usually your GitHub org/user name.
-  projectName: 'mhost', // Usually your repo name.
+  projectName: 'mhost.pustina.de', // Usually your repo name.
   themeConfig: {
     colorMode: {
     defaultMode: 'light',

@@ -2,7 +2,7 @@ module.exports = {
   title: 'mhost',
   tagline: 'A modern take on the classic host DNS lookup utility including an easy to use, and very fast Rust library.',
   url: 'https://mhost.pustina.de',
-  baseUrl: '/mhost.pustina.de/',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',

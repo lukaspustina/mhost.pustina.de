@@ -15,7 +15,8 @@ build:
 	npm run build
 
 deploy:
-	npm deploy
+	@if [ -z $${GIT_PASS+x} ]; then echo "Set env var 'GIT_PASS' to GITHUB token"; exit -1; fi
+	GIT_USER=lukaspustina npm run deploy	
 
 
 dev_env:

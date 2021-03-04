@@ -21,13 +21,13 @@ module.exports = {
         src: 'img/logo_blue.svg',
       },
       items: [
-        /*
         {
           to: 'docs/',
           activeBasePath: 'docs',
           label: 'Docs',
           position: 'left',
         },
+        /*
         {
           to: 'docs/examples/',
           activeBasePath: 'docs',

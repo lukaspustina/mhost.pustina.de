@@ -39,7 +39,7 @@ const features = [
     imageUrl: 'img/discover_blue.svg',
     description: (
       <>
-        mhost discovers host names, subdomains of any domain, as well as IP subnets in CIDR notation.
+        mhost discovers host names and subdomains of any domain as well as IP subnets in CIDR notation.
       </>
     ),
   },
@@ -83,8 +83,8 @@ function Home() {
   const {siteConfig = {}} = context;
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      title={`A modern DNS lookup, discover, and lint utility`}
+      description="mhost - a modern take on the classic host DNS lookup utility including an easy to use and very fast Rust library">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <h1 className="hero__title">{siteConfig.title}</h1>

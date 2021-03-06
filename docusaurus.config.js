@@ -27,18 +27,11 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        /*
-        {
-          to: 'docs/examples/',
-          activeBasePath: 'docs',
-          label: 'Examples',
-          position: 'left',
-        },
-        */
         {
           href: 'https://github.com/lukaspustina/mhost',
-          label: 'GitHub',
+          className: 'header-github-link',
           position: 'right',
+          'aria-label': 'GitHub repository',
         },
       ],
     },
@@ -89,7 +82,7 @@ module.exports = {
             },
             {
               label: 'Image Attributions',
-              to: 'docs/image_attributions/',
+              to: 'docs/attributions_images/',
             },
           ],
         },

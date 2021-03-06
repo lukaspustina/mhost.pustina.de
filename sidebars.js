@@ -1,10 +1,7 @@
 module.exports = {
   someSidebar: {
-    Documentation: ['installation'],
-    /*
-    Features: ['mdx'],
-    Examples: ['doc1', 'doc2', 'doc3'],
-    Attributions: ['image_attributions'],
-    */
+    Documentation: ['about', 'installation'],
+    Usage: ['usage_examples'],
+    Attributions: ['attributions_images'],
   },
 };

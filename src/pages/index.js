@@ -95,10 +95,9 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/')}>
+              to={useBaseUrl('docs/installation')}>
               Get Started
             </Link>
-          {/* 
             &nbsp;
             &nbsp;
             <Link
@@ -106,10 +105,9 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/examples/')}>
+              to={useBaseUrl('docs/usage_examples')}>
               Examples
             </Link>
-          */}
           </div>
         </div>
       </header>

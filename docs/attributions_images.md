@@ -1,9 +1,9 @@
 ---
-id: image_attributions
-title: Image Attributions
+id: attributions_images
+title: Images
+sidebar_label: Images
+slug: /attributions_images
 ---
-
-## Images
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 

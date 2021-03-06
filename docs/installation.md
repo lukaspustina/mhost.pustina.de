@@ -2,7 +2,7 @@
 id: installation
 title: Installation
 sidebar_label: Installation
-slug: /
+slug: /installation
 ---
 
 ## Docker

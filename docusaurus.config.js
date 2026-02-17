@@ -1,18 +1,43 @@
-module.exports = {
+/** @type {import('@docusaurus/types').Config} */
+const config = {
   title: 'mhost',
-  tagline: 'A modern take on the classic host DNS lookup utility including an easy to use and very fast Rust library.',
+  tagline: 'A modern, high-performance DNS Swiss Army knife and Rust library.',
   url: 'https://mhost.pustina.de',
   baseUrl: '/',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'lukaspustina', // Usually your GitHub org/user name.
-  projectName: 'mhost.pustina.de', // Usually your repo name.
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
+  organizationName: 'lukaspustina',
+  projectName: 'mhost.pustina.de',
+
+  presets: [
+    [
+      'classic',
+      /** @type {import('@docusaurus/preset-classic').Options} */
+      ({
+        docs: {
+          sidebarPath: './sidebars.js',
+          editUrl:
+            'https://github.com/lukaspustina/mhost.pustina.de/edit/master/',
+        },
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+      }),
+    ],
+  ],
+
+  /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
   themeConfig: {
     colorMode: {
-    defaultMode: 'light',
-    disableSwitch: true,
-    respectPrefersColorScheme: true,
+      defaultMode: 'light',
+      disableSwitch: true,
+      respectPrefersColorScheme: true,
     },
     navbar: {
       title: 'mhost',
@@ -23,7 +48,6 @@ module.exports = {
       items: [
         {
           to: 'docs/',
-          activeBasePath: 'docs',
           label: 'Docs',
           position: 'left',
         },
@@ -73,12 +97,12 @@ module.exports = {
           title: 'Legal Stuff',
           items: [
             {
-              label: "Legal Notice",
-              href: "https://lukas.pustina.de/legal_notice/",
+              label: 'Legal Notice',
+              href: 'https://lukas.pustina.de/legal_notice/',
             },
             {
-              label: "Privacy Policy",
-              href: "https://lukas.pustina.de/privacy_policy/",
+              label: 'Privacy Policy',
+              href: 'https://lukas.pustina.de/privacy_policy/',
             },
             {
               label: 'Image Attributions',
@@ -90,26 +114,6 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} Lukas Pustina`,
     },
   },
-  presets: [
-    [
-      '@docusaurus/preset-classic',
-      {
-        docs: {
-          sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
-        },
-        theme: {
-          customCss: require.resolve('./src/css/custom.css'),
-        },
-      },
-    ],
-  ],
 };
+
+module.exports = config;

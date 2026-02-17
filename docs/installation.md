@@ -5,52 +5,48 @@ sidebar_label: Installation
 slug: /installation
 ---
 
+## Homebrew (macOS)
+
+```sh
+brew install lukaspustina/mhost/mhost
+```
+
 ## Docker
 
-If you want to give `mhost` a quick spin and just try it out without too much hassle, you might want to try the Docker image:
+Try mhost without installing:
 
 ```sh
-$ docker run lukaspustina/mhost:latest mhost l mhost.pustina.de
+docker run lukaspustina/mhost:latest mhost l example.com
 ```
 
-## Homebrew
+## Debian / Ubuntu
 
-You can add this repository as a custom tap and then install `mhost` like this:
+Download the `.deb` from the [latest GitHub Release](https://github.com/lukaspustina/mhost/releases):
 
 ```sh
-$ brew tap lukaspustina/mhost https://github.com/lukaspustina/mhost.git
-$ brew install lukaspustina/mhost/mhost
+dpkg -i mhost.deb
 ```
 
-## Debian and Ubuntu
+## Redhat / Fedora
 
-You can find Debian packages on the [GitHub Release](https://github.com/lukaspustina/mhost/releases) page. Download the package as `mhost.deb` and the run
+Download the `.rpm` from the [latest GitHub Release](https://github.com/lukaspustina/mhost/releases):
 
 ```sh
-$ dpkg -i mhost.deb
+rpm -i mhost.rpm
 ```
 
-## Redhat and Fedora
-
-You can find RPM packages on the [GitHub Release](https://github.com/lukaspustina/mhost/releases) page. Download the package as `mhost.rpm` and the run
+## Cargo (Rust developers)
 
 ```sh
-$ rpm -i mhost.rpm
-```
-
-## For Rust Developers
-
-```sh
-$ cargo install --features app mhost
+cargo install --features app mhost       # CLI only
+cargo install --features tui mhost       # CLI + interactive TUI (mdive)
 ```
 
 ## From Source
 
-Please install Rust via [rustup](https://www.rustup.rs) and then run
-
 ```sh
-$ git clone https://github.com/lukaspustina/mhost
-$ cd mhost
-$ make install
+git clone https://github.com/lukaspustina/mhost
+cd mhost
+make install                             # CLI only
+cargo install --features tui --path .    # CLI + TUI
 ```
-

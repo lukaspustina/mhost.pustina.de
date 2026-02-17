@@ -1,75 +1,72 @@
-import React from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
 
 const features = [
-    {
-    title: 'Super fast and reliable',
+  {
+    title: 'Parallel multi-server queries',
     imageUrl: 'img/fast_reliable_blue.svg',
     description: (
       <>
-        mhost is very fast and uses multiple DNS servers concurrently and aggregates all results for more reliable lookups.
+        Query 84 built-in public resolvers in parallel and aggregate all results. More servers means more confidence you're seeing the full picture.
       </>
     ),
   },
   {
-    title: 'Classic and modern',
+    title: 'All four protocols',
     imageUrl: 'img/classic_modern_blue.svg',
     description: (
       <>
-        mhost supports classic DNS over UDP and TCP as well as modern DNS over TLS (DoT) and HTTP (DoH).
+        DNS over UDP, TCP, TLS (DoT), and HTTPS (DoH). Ships with 84 configurations across Cloudflare, Google, Quad9, Mullvad, Wikimedia, and DNS4EU.
       </>
     ),
   },
   {
-    title: 'Human and machine friendly',
-    imageUrl: 'img/human_machine_friendly_blue.svg',
-    description: (
-      <>
-        mhost presents results in an easy, human readable format or as JSON for post-processing.
-      </>
-    ),
-  },
-  {
-    title: 'Discover hosts and subdomains',
+    title: 'Discover subdomains',
     imageUrl: 'img/discover_blue.svg',
     description: (
       <>
-        mhost discovers host names and subdomains of any domain as well as IP subnets in CIDR notation.
+        10+ discovery strategies: Certificate Transparency logs, wordlists, AXFR, NSEC walking, SRV probing, TXT mining, permutation, recursive depth, and more.
       </>
     ),
   },
   {
-    title: 'Lint your domain server configuration',
+    title: 'Validate DNS configuration',
     imageUrl: 'img/lint_blue.svg',
     description: (
       <>
-        mhost uses lints to validate the DNS configurations of any domain.
+        13 lints check SOA, NS delegation, MX, SPF, DMARC, CAA, DNSSEC, HTTPS/SVCB, TTL consistency, zone transfer exposure, and delegation consistency.
       </>
     ),
   },
   {
-    title: 'API',
+    title: 'Propagation, diff, verify, trace',
+    imageUrl: 'img/human_machine_friendly_blue.svg',
+    description: (
+      <>
+        Check propagation across public resolvers. Diff records between nameservers or JSON snapshots. Verify live DNS against BIND zone files. Trace the full delegation chain.
+      </>
+    ),
+  },
+  {
+    title: 'Interactive TUI + Rust library',
     imageUrl: 'img/api_blue.svg',
     description: (
       <>
-        mhost offers an easy to use Rust library so you can use the same lookup capabilities in your own project.
+        <code>mdive</code> is an interactive terminal UI for exploring DNS with drill-down navigation and real-time discovery. Plus an async Rust library for your own projects.
       </>
     ),
   },
 ];
 
 function Feature({imageUrl, title, description}) {
-  const imgUrl = useBaseUrl(imageUrl);
   return (
     <div className={clsx('col col--4', styles.feature)}>
-      {imgUrl && (
+      {imageUrl && (
         <div className="text--center">
-          <img className={styles.featureImage} src={imgUrl} alt={title} />
+          <img className={styles.featureImage} src={imageUrl} alt={title} />
         </div>
       )}
       <h3>{title}</h3>
@@ -78,13 +75,12 @@ function Feature({imageUrl, title, description}) {
   );
 }
 
-function Home() {
-  const context = useDocusaurusContext();
-  const {siteConfig = {}} = context;
+export default function Home() {
+  const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`A modern DNS lookup, discover, and lint utility`}
-      description="mhost - a modern take on the classic host DNS lookup utility including an easy to use and very fast Rust library">
+      title="DNS lookup, discovery, linting, and more"
+      description="mhost - a modern, high-performance DNS Swiss Army knife and Rust library. Parallel multi-server queries, subdomain discovery, DNS linting, propagation checking, zone file verification, and an interactive TUI.">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <h1 className="hero__title">{siteConfig.title}</h1>
@@ -95,7 +91,7 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/installation')}>
+              to="/docs/installation">
               Get Started
             </Link>
             &nbsp;
@@ -105,8 +101,18 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/usage_examples')}>
+              to="/docs/usage_examples">
               Examples
+            </Link>
+            &nbsp;
+            &nbsp;
+            <Link
+              className={clsx(
+                'button button--outline button--secondary button--lg',
+                styles.getStarted,
+              )}
+              to="https://github.com/lukaspustina/mhost">
+              GitHub
             </Link>
           </div>
         </div>
@@ -115,7 +121,7 @@ function Home() {
         <section>
           <div className="text--center">
             <br/>
-            <a href="https://asciinema.org/a/s4EVrGQ9V1rifpCZLG0c1Xa3B" target="_blank"><img className={styles.indexAsciinema} src="img/index_example.png"/></a>
+            <img className={styles.indexAsciinema} src="img/multi-lookup-all-records-github.png" alt="mhost looking up all record types for github.com"/>
           </div>
         </section>
         {features && features.length > 0 && (
@@ -133,5 +139,3 @@ function Home() {
     </Layout>
   );
 }
-
-export default Home;

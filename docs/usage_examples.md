@@ -5,84 +5,232 @@ sidebar_label: Examples
 slug: /usage_examples
 ---
 
-`mhost` has three main verbs: `lookup`, `discover`, `check`. Each verb can be abbreviated to shorter forms as long as they remain unambiguous, e.g., `l` for `lookup`, `d` for `discover`, and `c` for `check`.
+mhost has many commands, each with a short alias: `lookup` (`l`), `domain-lookup` (`domain`), `discover` (`d`), `check` (`c`), `trace` (`t`), `propagation` (`prop`), `verify` (`v`), `diff`, and `info`.
 
-## Just lookup an IP address
+## Simple Lookup
 
 ```sh
-$ mhost l github.com
+mhost l github.com
 ```
 
 ![Default lookup for github.com.](/img/default-lookup-github.png)
 
-In this run, all default settings are applied. Especially, `most` uses only the local system’s name servers and queries only the default record types.
+Uses your system nameservers and queries the default record types (A, AAAA, CNAME, MX).
 
-### Just lookup an IP address, using more than just your local name servers
+### More nameservers, more answers
 
 ```sh
-$ mhost -p l github.com
+mhost -p l github.com
 ```
 
 ![Default lookup with predefined servers for github.com.](/img/default-lookup-predefined-servers-github.png)
 
-See, there’re more answers than before!
+`-p` adds 84 predefined public nameservers from Cloudflare, Google, Quad9, Mullvad, Wikimedia, and DNS4EU. More servers means more confidence that you're seeing the full picture.
 
-`-p` add public name servers that `mhost` predefines for your convenience. By default, only the UDP is used to contact the predefined name servers. You can control this behaviour using `--predefined-filter` and filter for UDP, TCP, DoT, DoH. `--list-predefined` show all available predefined name servers.
-
-### Just lookup an IP address, using even more than just your local name servers
+### Thousands of nameservers
 
 ```sh
-$ mhost server-lists public-dns -o servers.txt
-$ mhost --limit 6000 --max-concurrent-servers 1000 --timeout 1 -f servers.txt l www.github.com
+mhost server-lists public-dns -o servers.txt
+mhost --limit 6000 --max-concurrent-servers 1000 --timeout 1 -f servers.txt l www.github.com
 ```
 
 ![Default lookup with servers list for github.com.](/img/default-lookup-servers-list-github.png)
 
-See, there’re even more answers than before!
+Download a community-maintained list of public resolvers, then fire queries at all of them. These settings are intentionally aggressive -- mhost defaults are much more cautious.
 
-The first command downloads a list of public available name servers that are maintained by the [Public DNS](https://public-dns.info) community. Usually only a subset of these are reachable, but it still a large set of active name servers.
-
-The second command uses the name servers list from before and queries all of them concurrently. These settings are very aggressive and highly stresses your internet connection. `mhost` default settings are set much more cautiously.
-
-### Just lookup an IP address, using UDP, TCP, DoT, and DoH
+### All four protocols at once
 
 ```sh
-$ mhost -s 1.1.1.1 -s tcp:1.1.1.1 -s tls:1.1.1.1:853,tls_auth_name=cloudflare-dns.com -s https:1.1.1.1:443,tls_auth_name=cloudflare-dns.com,name=Cloudflare -p l github.com
+mhost \
+  -s 1.1.1.1 \
+  -s tcp:1.1.1.1 \
+  -s tls:1.1.1.1:853,tls_auth_name=cloudflare-dns.com \
+  -s https:1.1.1.1:443,tls_auth_name=cloudflare-dns.com,name=Cloudflare \
+  l github.com
 ```
-
-As already mentioned before, `mhost` supports DNS queries over UDP, TCP, DNS over TLS (DoT), as well as DNS over HTTPS (DoH). In the above example, `mhost` uses all four protocols to query Cloudflare’s name servers.
-
-This command also shows the syntax for name server specification, which in general is `protocol:<host name | ip address>:port,tls_auth_name=hostname,name=human-readable-name`.
 
 ![Default lookup with all protocols for github.com.](/img/default-lookup-all-protocols-github.png)
 
-## Discover a domain
+Nameserver spec format: `protocol:host:port,tls_auth_name=hostname,name=label`
 
-Sometimes you want to know which host names and subdomains a domain has. `mhost` offers a simple command to help you find these. Please mind, that `mhost` only uses DNS specific discovery methods. If you want even deeper discoveries using Google, Shodan etc. there are other tools available.
+### All record types + WHOIS
 
 ```sh
-$ mhost -p d github.com -p
+mhost -p l --all -w github.com
 ```
 
-This command uses the predefined name servers to discover the GitHub domain. The `-s` reduces all discovered names to real subdomains of `github.com.`.
+![Multi lookup for all available records of github.com.](/img/multi-lookup-all-records-github.png)
+
+Query all 20+ record types and include WHOIS information for every IP address in the results.
+
+## Profile an Entire Domain
+
+```sh
+mhost -p domain-lookup example.com         # ~42 well-known entries
+mhost -p domain-lookup --all example.com   # ~68 entries (extended set)
+```
+
+One command queries the apex plus dozens of well-known subdomains: email auth (DMARC, MTA-STS, BIMI, TLS-RPT), SRV services (IMAP, SMTP, CalDAV, XMPP, Matrix, ...), DANE/TLSA records, and more.
+
+## Discover Subdomains
+
+```sh
+mhost -p d github.com
+```
 
 ![Discover github.com.](/img/discover-github.png)
 
-You can go one more step and explore the autonomous systems GitHub uses. In order to discover those, you can use the following commands:
+mhost chains 10+ discovery strategies automatically:
+
+1. Standard DNS record lookups
+2. Certificate Transparency logs (crt.sh)
+3. TXT record mining for referenced domains
+4. SRV service probing
+5. Wildcard detection via random subdomain probes
+6. Zone transfer (AXFR) attempts
+7. NSEC walking
+8. Wordlist brute force (424 built-in entries, or supply your own with `-w`)
+9. Subdomain permutation on discovered names
+10. Recursive discovery on found subdomains (`--depth 1..3`)
+11. Reverse DNS lookups on discovered IPs
+
+### Explore autonomous systems
 
 ```sh
-$ mhost -p l --all -w github.com
-$ mhost -p l --all 140.82.121.0/24
+mhost -p l --all -w github.com
+mhost -p l --all 140.82.121.0/24
 ```
 
 ![Discover AS of github.com.](/img/discover-as-github.png)
 
-## Check your name server configuration
+## Validate DNS Configuration
 
 ```sh
-$ mhost -p c github.com -p
+mhost -p c github.com
 ```
 
 ![Check github.com.](/img/check-github.png)
 
+The `check` command runs 13 lints against a domain's DNS records:
 
+| Lint | What it checks |
+|------|---------------|
+| SOA | Start of Authority record validity |
+| NS | NS delegation, lame delegation, network diversity |
+| CNAME | CNAME usage rules |
+| MX | Null MX, duplicate preferences, target resolution |
+| SPF | SPF record syntax and policy |
+| DMARC | DMARC policy validation |
+| CAA | Certificate Authority Authorization tags |
+| TTL | TTL consistency across records |
+| DNSSEC | DNSSEC presence and configuration |
+| HTTPS/SVCB | Service binding record well-formedness |
+| AXFR | Zone transfer exposure |
+| Open Resolver | Open resolver detection |
+| Delegation | Delegation consistency |
+
+Disable any lint individually: `--no-soa`, `--no-spf`, `--no-dnssec`, etc.
+
+## Trace the Delegation Chain
+
+```sh
+mhost trace example.com
+mhost trace -t AAAA --show-all-servers example.com
+```
+
+Unlike `dig +trace` which queries one server per hop, mhost's `trace` queries **all nameservers at each delegation level in parallel**. It detects referral divergence (where different root/TLD servers disagree), reports per-server latency, and resolves missing glue records automatically.
+
+## Check DNS Propagation
+
+```sh
+mhost -p propagation example.com
+mhost -p prop --all example.com
+```
+
+After making a DNS change, check whether it has reached all the major public resolvers. Uses the predefined nameserver set (Cloudflare, Google, Quad9, Mullvad, Wikimedia, DNS4EU).
+
+## Diff Records Between Nameservers
+
+```sh
+mhost diff --left 8.8.8.8 --right 1.1.1.1 --all example.com
+```
+
+Compare what two different nameserver sets return for the same domain. You can also diff against saved JSON snapshots:
+
+```sh
+# Save a snapshot
+mhost lookup -s 8.8.8.8 -q -t A,AAAA,MX example.com --output json > before.json
+
+# Later, diff snapshot against live DNS
+mhost diff --left-from-file before.json --right 1.1.1.1 example.com
+
+# Or compare two snapshots offline
+mhost diff --left-from-file before.json --right-from-file after.json example.com
+```
+
+## Verify DNS Against a Zone File
+
+```sh
+mhost verify example.com.zone
+```
+
+Compares every record in a BIND zone file against live DNS and reports matches, mismatches, and missing records. Non-zero exit code on mismatch for CI/CD integration.
+
+```sh
+# Verify against your authoritative nameserver
+mhost -s ns1.example.com verify example.com.zone
+
+# Check propagation to public resolvers
+mhost -p verify example.com.zone
+
+# Strict mode: also flag TTL differences
+mhost verify --strict example.com.zone
+
+# Only check mail-related records
+mhost verify --only-type MX,TXT example.com.zone
+
+# CI one-liner
+mhost verify zones/example.com.zone || notify_team "DNS drift detected"
+```
+
+## Look Up Record Type Info
+
+```sh
+mhost info            # List all supported types
+mhost info MX         # Details about MX records
+mhost info SPF        # Details about SPF TXT sub-type
+mhost info _dmarc     # Details about the _dmarc well-known subdomain
+```
+
+Built-in reference with summaries, details, and RFC references for every supported record type, TXT sub-type, and well-known subdomain.
+
+## JSON Output
+
+Every command supports `--output json` for machine-readable output:
+
+```sh
+mhost -q --output json l --all example.com | jq .
+mhost -q --output json trace example.com | jq '.hops[] | .zone_name'
+mhost -q --output json c example.com | jq '.results[] | select(.status != "Ok")'
+```
+
+## mdive -- Interactive TUI
+
+`mdive` is an interactive terminal UI for exploring DNS. Type a domain, watch records stream in from multiple servers in real time, then drill into anything interesting.
+
+```sh
+mdive example.com                        # Dive right in
+mdive -p example.com                     # Use 84 public resolvers
+mdive -s 8.8.8.8 -s 1.1.1.1 example.com # Pick your own nameservers
+```
+
+**What you get:**
+
+- **Live, sortable record table** -- apex plus dozens of well-known subdomains across 10 categories, with progressive streaming and a real-time progress bar
+- **Drill-down navigation** -- press `l` to follow CNAMEs, Enter to dive into subdomains, Backspace to go back (like `cd` and `cd ..` for DNS)
+- **Five discovery strategies** -- press `d` for CT logs, wordlists, SRV probing, TXT mining, and permutation
+- **DNS health checks** -- press `c` for 9 lint categories with color-coded pass/warning/fail results
+- **WHOIS and geolocation** -- press `w` for AS numbers, network prefixes, organizations, and countries for all IPs
+- **Server response dashboard** -- press `s` for per-server latency stats (protocol, OK/error counts, min/avg/max)
+- **Regex filtering** -- press `/` and type a pattern to filter across names, types, and values
+- **Vi-style navigation** -- `j`/`k`, `gg`/`G`, digit-prefixed commands, Tab to cycle grouping modes

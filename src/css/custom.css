@@ -4,17 +4,70 @@
  * work well for content-centric websites.
  */
 
-/* You can override the default Infima variables here. */
+/* ---------- Light mode palette ---------- */
 :root {
-  --ifm-color-primary: #607088;
-  --ifm-color-primary-dark: #56657a;
-  --ifm-color-primary-darker: #525f74;
-  --ifm-color-primary-darkest: #434e5f;
-  --ifm-color-primary-light: #6a7b96;
-  --ifm-color-primary-lighter: #70819a;
-  --ifm-color-primary-lightest: #8593a9;
+  --ifm-color-primary: #2e8b8b;
+  --ifm-color-primary-dark: #287c7c;
+  --ifm-color-primary-darker: #257575;
+  --ifm-color-primary-darkest: #1e6060;
+  --ifm-color-primary-light: #349a9a;
+  --ifm-color-primary-lighter: #37a1a1;
+  --ifm-color-primary-lightest: #42b8b8;
+
+  --accent-orange: #e8734a;
+  --accent-orange-hover: #d45f36;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-shadow: rgba(0, 0, 0, 0.06);
+  --terminal-bar: #e2e8f0;
+  --terminal-body-bg: #1e293b;
+  --hero-gradient-start: #0f172a;
+  --hero-gradient-end: #1e3a4a;
 }
 
+/* ---------- Dark mode palette ---------- */
+[data-theme='dark'] {
+  --ifm-color-primary: #4ecdc4;
+  --ifm-color-primary-dark: #3ac5bb;
+  --ifm-color-primary-darker: #35bfb5;
+  --ifm-color-primary-darkest: #2ba199;
+  --ifm-color-primary-light: #62d5cd;
+  --ifm-color-primary-lighter: #68d7d0;
+  --ifm-color-primary-lightest: #88e1db;
+
+  --accent-orange: #f0885f;
+  --accent-orange-hover: #e8734a;
+  --card-bg: #1e293b;
+  --card-border: #334155;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  --terminal-bar: #334155;
+  --terminal-body-bg: #0f172a;
+}
+
+/* ---------- Global keyframes ---------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Frosted glass navbar ---------- */
+.navbar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme='dark'] .navbar {
+  background: rgba(15, 23, 42, 0.85) !important;
+}
+
+/* ---------- Code highlight line ---------- */
 .docusaurus-highlight-code-line {
   background-color: rgb(72, 77, 91);
   display: block;
@@ -22,6 +75,7 @@
   padding: 0 var(--ifm-pre-padding);
 }
 
+/* ---------- GitHub header link ---------- */
 .header-github-link:hover {
   opacity: 0.6;
 }

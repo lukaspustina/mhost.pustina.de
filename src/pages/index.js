@@ -61,16 +61,19 @@ const features = [
   },
 ];
 
-function Feature({imageUrl, title, description}) {
+function Feature({imageUrl, title, description, index}) {
+  const delayClass = styles[`featureDelay${index}`];
   return (
     <div className={clsx('col col--4', styles.feature)}>
-      {imageUrl && (
-        <div className="text--center">
-          <img className={styles.featureImage} src={imageUrl} alt={title} />
-        </div>
-      )}
-      <h3>{title}</h3>
-      <p>{description}</p>
+      <div className={clsx(styles.featureCard, delayClass)}>
+        {imageUrl && (
+          <div className="text--center">
+            <img className={styles.featureImage} src={imageUrl} alt={title} />
+          </div>
+        )}
+        <h3 className={styles.featureTitle}>{title}</h3>
+        <p className={styles.featureDescription}>{description}</p>
+      </div>
     </div>
   );
 }
@@ -81,35 +84,31 @@ export default function Home() {
     <Layout
       title="DNS lookup, discovery, linting, and more"
       description="mhost - a modern, high-performance DNS Swiss Army knife and Rust library. Parallel multi-server queries, subdomain discovery, DNS linting, propagation checking, zone file verification, and an interactive TUI.">
-      <header className={clsx('hero hero--primary', styles.heroBanner)}>
+      <header className={styles.heroBanner}>
         <div className="container">
-          <h1 className="hero__title">{siteConfig.title}</h1>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
+          <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
+          <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
           <div className={styles.buttons}>
             <Link
               className={clsx(
-                'button button--outline button--secondary button--lg',
-                styles.getStarted,
+                'button button--lg',
+                styles.ctaPrimary,
               )}
               to="/docs/installation">
               Get Started
             </Link>
-            &nbsp;
-            &nbsp;
             <Link
               className={clsx(
-                'button button--outline button--secondary button--lg',
-                styles.getStarted,
+                'button button--outline button--lg',
+                styles.ctaSecondary,
               )}
               to="/docs/usage_examples">
               Examples
             </Link>
-            &nbsp;
-            &nbsp;
             <Link
               className={clsx(
-                'button button--outline button--secondary button--lg',
-                styles.getStarted,
+                'button button--outline button--lg',
+                styles.ctaSecondary,
               )}
               to="https://github.com/lukaspustina/mhost">
               GitHub
@@ -119,9 +118,16 @@ export default function Home() {
       </header>
       <main>
         <section>
-          <div className="text--center">
-            <br/>
-            <img className={styles.indexAsciinema} src="img/multi-lookup-all-records-github.png" alt="mhost looking up all record types for github.com"/>
+          <div className={styles.terminalFrame}>
+            <div className={styles.terminalBar}>
+              <span className={styles.terminalDotRed} />
+              <span className={styles.terminalDotYellow} />
+              <span className={styles.terminalDotGreen} />
+              <span className={styles.terminalTitle}>mhost -- github.com</span>
+            </div>
+            <div className={styles.terminalBody}>
+              <img src="img/multi-lookup-all-records-github.png" alt="mhost looking up all record types for github.com"/>
+            </div>
           </div>
         </section>
         {features && features.length > 0 && (
@@ -129,7 +135,7 @@ export default function Home() {
             <div className="container">
               <div className="row">
                 {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
+                  <Feature key={idx} index={idx} {...props} />
                 ))}
               </div>
             </div>

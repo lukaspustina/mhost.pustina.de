@@ -1,7 +1,5 @@
 .EXPORT_ALL_VARIABLES:
 
-PATH := /usr/local/opt/node@10/bin:$(PATH)
-
 all:
 
 init:
@@ -15,8 +13,7 @@ build:
 	npm run build
 
 deploy:
-	@if [ -z $${GIT_PASS+x} ]; then echo "Set env var 'GIT_PASS' to GITHUB token"; exit -1; fi
-	GIT_USER=lukaspustina npm run deploy	
+	USE_SSH=true npm run deploy
 
 
 dev_env:

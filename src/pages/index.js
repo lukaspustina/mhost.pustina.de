@@ -6,11 +6,11 @@ import styles from './styles.module.css';
 
 const features = [
   {
-    title: 'Parallel multi-server queries',
+    title: 'Query everything, everywhere',
     imageUrl: 'img/fast_reliable_blue.svg',
     description: (
       <>
-        Query 84 built-in public resolvers in parallel and aggregate all results. More servers means more confidence you're seeing the full picture.
+        Fire queries at up to 10,000 nameservers in parallel. Ships with 84 built-in public resolvers from 6 providers. Add WHOIS with <code>-w</code> to see who's behind every IP.
       </>
     ),
   },
@@ -19,34 +19,34 @@ const features = [
     imageUrl: 'img/classic_modern_blue.svg',
     description: (
       <>
-        DNS over UDP, TCP, TLS (DoT), and HTTPS (DoH). Ships with 84 configurations across Cloudflare, Google, Quad9, Mullvad, Wikimedia, and DNS4EU.
+        UDP, TCP, DNS-over-TLS, DNS-over-HTTPS -- because it's not 2005 anymore. 84 pre-configured endpoints across Cloudflare, Google, Quad9, Mullvad, Wikimedia, and DNS4EU.
       </>
     ),
   },
   {
-    title: 'Discover subdomains',
+    title: 'Hunt down subdomains',
     imageUrl: 'img/discover_blue.svg',
     description: (
       <>
-        10+ discovery strategies: Certificate Transparency logs, wordlists, AXFR, NSEC walking, SRV probing, TXT mining, permutation, recursive depth, and more.
+        10+ discovery strategies chained automatically: CT logs, wordlists, AXFR, NSEC walking, SRV probing, TXT mining, permutation, recursive depth, and reverse DNS.
       </>
     ),
   },
   {
-    title: 'Validate DNS configuration',
+    title: 'Lint your DNS',
     imageUrl: 'img/lint_blue.svg',
     description: (
       <>
-        13 lints check SOA, NS delegation, MX, SPF, DMARC, CAA, DNSSEC, HTTPS/SVCB, TTL consistency, zone transfer exposure, and delegation consistency.
+        13 lints catch the things you forgot: lame delegation, missing SPF, broken DMARC, exposed zone transfers, open resolvers, DNSSEC gaps, and more.
       </>
     ),
   },
   {
-    title: 'Propagation, diff, verify, trace',
+    title: 'Trace, diff, verify, propagate',
     imageUrl: 'img/human_machine_friendly_blue.svg',
     description: (
       <>
-        Check propagation across public resolvers. Diff records between nameservers or JSON snapshots. Verify live DNS against BIND zone files. Trace the full delegation chain.
+        Trace delegation from the root. Visualize DNSSEC trust chains. Diff records between nameservers or snapshots. Verify zone files in CI. Check propagation across the globe.
       </>
     ),
   },
@@ -55,7 +55,7 @@ const features = [
     imageUrl: 'img/api_blue.svg',
     description: (
       <>
-        <code>mdive</code> is an interactive terminal UI for exploring DNS with drill-down navigation and real-time discovery. Plus an async Rust library for your own projects.
+        <code>mdive</code> turns DNS into a browsable, drillable, filterable experience with vi-style keys and real-time discovery. Plus an async Rust library for building your own tools.
       </>
     ),
   },

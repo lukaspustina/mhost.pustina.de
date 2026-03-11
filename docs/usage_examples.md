@@ -5,7 +5,7 @@ sidebar_label: Examples
 slug: /usage_examples
 ---
 
-mhost has many commands, each with a short alias: `lookup` (`l`), `domain-lookup` (`domain`), `discover` (`d`), `check` (`c`), `trace` (`t`), `propagation` (`prop`), `verify` (`v`), `diff`, and `info`.
+mhost has many commands, each with a short alias: `lookup` (`l`), `domain-lookup` (`domain`), `discover` (`d`), `check` (`c`), `trace` (`t`), `dnssec`, `propagation` (`prop`), `verify` (`v`), `diff`, `info`, `server-lists`, and `completions`.
 
 ## Simple Lookup
 
@@ -15,7 +15,7 @@ mhost l github.com
 
 ![Default lookup for github.com.](/img/default-lookup-github.png)
 
-Uses your system nameservers and queries the default record types (A, AAAA, CNAME, MX).
+Uses your system nameservers and queries the default record types (A, AAAA, CNAME, MX). Quick, clean, done.
 
 ### More nameservers, more answers
 
@@ -25,7 +25,7 @@ mhost -p l github.com
 
 ![Default lookup with predefined servers for github.com.](/img/default-lookup-predefined-servers-github.png)
 
-`-p` adds 84 predefined public nameservers from Cloudflare, Google, Quad9, Mullvad, Wikimedia, and DNS4EU. More servers means more confidence that you're seeing the full picture.
+`-p` adds 84 predefined public nameservers from Cloudflare, Google, Quad9, Mullvad, Wikimedia, and DNS4EU -- all four protocols, IPv4 and IPv6. More servers means more confidence that you're seeing the full picture.
 
 ### Thousands of nameservers
 
@@ -36,7 +36,7 @@ mhost --limit 6000 --max-concurrent-servers 1000 --timeout 1 -f servers.txt l ww
 
 ![Default lookup with servers list for github.com.](/img/default-lookup-servers-list-github.png)
 
-Download a community-maintained list of public resolvers, then fire queries at all of them. These settings are intentionally aggressive -- mhost defaults are much more cautious.
+The `server-lists` command downloads community-maintained lists of public resolvers. Then just point mhost at the file and let it rip. These settings are intentionally aggressive -- mhost defaults are much more cautious.
 
 ### All four protocols at once
 
@@ -61,7 +61,7 @@ mhost -p l --all -w github.com
 
 ![Multi lookup for all available records of github.com.](/img/multi-lookup-all-records-github.png)
 
-Query all 20+ record types and include WHOIS information for every IP address in the results.
+Query all 20+ record types and include WHOIS information for every IP address in the results -- AS numbers, network prefixes, organizations, countries, and geolocation. Great for understanding who's hosting what.
 
 ## Profile an Entire Domain
 
@@ -70,7 +70,7 @@ mhost -p domain-lookup example.com         # ~42 well-known entries
 mhost -p domain-lookup --all example.com   # ~68 entries (extended set)
 ```
 
-One command queries the apex plus dozens of well-known subdomains: email auth (DMARC, MTA-STS, BIMI, TLS-RPT), SRV services (IMAP, SMTP, CalDAV, XMPP, Matrix, ...), DANE/TLSA records, and more.
+One command to rule them all. Queries the apex plus dozens of well-known subdomains in parallel: email auth (DMARC, MTA-STS, BIMI, TLS-RPT), SRV services (IMAP, SMTP, CalDAV, XMPP, Matrix, LDAP, Kerberos, ...), DANE/TLSA records, ACME challenges, AT Protocol, DNSLink, and more. It's a complete domain health snapshot.
 
 ## Discover Subdomains
 
@@ -80,7 +80,7 @@ mhost -p d github.com
 
 ![Discover github.com.](/img/discover-github.png)
 
-mhost chains 10+ discovery strategies automatically:
+mhost doesn't just try one thing -- it chains 10+ discovery strategies automatically, each feeding results into the next:
 
 1. Standard DNS record lookups
 2. Certificate Transparency logs (crt.sh)
@@ -140,6 +140,26 @@ mhost trace -t AAAA --show-all-servers example.com
 
 Unlike `dig +trace` which queries one server per hop, mhost's `trace` queries **all nameservers at each delegation level in parallel**. It detects referral divergence (where different root/TLD servers disagree), reports per-server latency, and resolves missing glue records automatically.
 
+## Visualize the DNSSEC Trust Chain
+
+```sh
+mhost dnssec example.com
+```
+
+Ever wondered if DNSSEC is actually set up correctly from root to leaf? The `dnssec` command walks the entire delegation chain, querying DNSKEY, DS, and RRSIG records at every level, and renders a color-coded trust chain tree. You'll see key roles (KSK vs ZSK), algorithm strength, signature expiry dates, and whether DS records actually match the DNSKEYs they point to. No more guessing -- just follow the chain.
+
+```sh
+mhost dnssec --show-partial-results example.com   # Watch each level as it resolves
+```
+
+## Look Up SRV Services
+
+```sh
+mhost l -s smtp:tcp:example.com
+```
+
+The `-s` flag parses SRV service specs directly. Instead of manually constructing `_smtp._tcp.example.com`, just tell mhost the service, protocol, and domain in a human-readable format.
+
 ## Check DNS Propagation
 
 ```sh
@@ -147,7 +167,7 @@ mhost -p propagation example.com
 mhost -p prop --all example.com
 ```
 
-After making a DNS change, check whether it has reached all the major public resolvers. Uses the predefined nameserver set (Cloudflare, Google, Quad9, Mullvad, Wikimedia, DNS4EU).
+You just changed a DNS record. Now the waiting game begins -- or does it? Fire this off and see exactly which resolvers have picked up your change and which are still serving stale data. Uses the predefined nameserver set (Cloudflare, Google, Quad9, Mullvad, Wikimedia, DNS4EU).
 
 ## Diff Records Between Nameservers
 
@@ -155,7 +175,7 @@ After making a DNS change, check whether it has reached all the major public res
 mhost diff --left 8.8.8.8 --right 1.1.1.1 --all example.com
 ```
 
-Compare what two different nameserver sets return for the same domain. You can also diff against saved JSON snapshots:
+Spot the differences before your users do. Compare what two different nameserver sets return for the same domain. You can also diff against saved JSON snapshots -- perfect for tracking changes over time:
 
 ```sh
 # Save a snapshot
@@ -216,7 +236,7 @@ mhost -q --output json c example.com | jq '.results[] | select(.status != "Ok")'
 
 ## mdive -- Interactive TUI
 
-`mdive` is an interactive terminal UI for exploring DNS. Type a domain, watch records stream in from multiple servers in real time, then drill into anything interesting.
+`mdive` is an interactive terminal UI that makes DNS exploration feel less like debugging and more like browsing. Type a domain, watch records stream in from multiple servers in real time, then drill into anything that looks interesting.
 
 ```sh
 mdive example.com                        # Dive right in
@@ -227,10 +247,14 @@ mdive -s 8.8.8.8 -s 1.1.1.1 example.com # Pick your own nameservers
 **What you get:**
 
 - **Live, sortable record table** -- apex plus dozens of well-known subdomains across 10 categories, with progressive streaming and a real-time progress bar
-- **Drill-down navigation** -- press `l` to follow CNAMEs, Enter to dive into subdomains, Backspace to go back (like `cd` and `cd ..` for DNS)
-- **Five discovery strategies** -- press `d` for CT logs, wordlists, SRV probing, TXT mining, and permutation
-- **DNS health checks** -- press `c` for 9 lint categories with color-coded pass/warning/fail results
-- **WHOIS and geolocation** -- press `w` for AS numbers, network prefixes, organizations, and countries for all IPs
-- **Server response dashboard** -- press `s` for per-server latency stats (protocol, OK/error counts, min/avg/max)
-- **Regex filtering** -- press `/` and type a pattern to filter across names, types, and values
-- **Vi-style navigation** -- `j`/`k`, `gg`/`G`, digit-prefixed commands, Tab to cycle grouping modes
+- **Drill-down navigation** -- press Enter to dive into subdomains, `l` to follow CNAMEs, Backspace to go back. It's like `cd` and `cd ..`, but for DNS.
+- **Five discovery strategies** -- press `d` to launch CT log searches, wordlist brute force, SRV probing, TXT mining, and permutation -- or `a` to run them all at once
+- **DNS health checks** -- press `c` to run 13 lints with color-coded pass/warning/fail results
+- **WHOIS and geolocation** -- press `w` to see AS numbers, network prefixes, organizations, and countries for every IP
+- **Server response dashboard** -- press `s` for per-server latency stats (protocol, OK/error counts, min/avg/max timing)
+- **Stats panel** -- press `S` for record type distribution, query health, DNSSEC status, and response time ranges
+- **Human-readable toggle** -- press `h` to switch between raw DNS wire format and human-friendly values
+- **Regex filtering** -- press `/` and type a pattern to filter across names, types, and values. Press `C` to clear.
+- **10 category toggles** -- use `1`-`0` to toggle record categories (email auth, email services, TLS/DANE, communication, calendar/contacts, infrastructure, modern protocols, verification, legacy, gaming). Press `a` for all, `n` for none.
+- **Grouping modes** -- press Tab to cycle between grouping by category, record type, name, or server
+- **Vi-style navigation** -- `j`/`k`, `gg`/`G`, PgUp/PgDn, digit-prefixed jumps (`22gg`), and `o` for a detail popup on any record
